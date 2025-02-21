@@ -35,6 +35,8 @@ namespace server.Models
         [Required]
         [MinAge(16)]
         public DateTime DateOfBirth { get; set; }
+        public bool isLocked { get; set; }
+        public DateTime CreatedAt { get; set; }
 
 
 

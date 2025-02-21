@@ -5,20 +5,20 @@ using System;
 using server.Database_SQL;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using server.InjectService;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
+
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
 //Get JWT setting from appsettings.json
-var jwtSetting = builder.Configuration.GetSection("JWTSettings");
+var jwtSetting = builder.Configuration.GetSection("JWTSetting");
 var secretKey = jwtSetting.GetValue<string>("SecretKey");
 
 builder.Services.AddAuthentication(option =>
@@ -44,6 +44,7 @@ builder.Services.AddAuthentication(option =>
 
 });
 
+builder.Services.Inject(builder.Configuration);
 
 
 
